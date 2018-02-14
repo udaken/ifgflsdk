@@ -1,0 +1,322 @@
+                            GFL SDK v3.40
+
+                   Copyright (c) 1991-2011 Pierre-E Gougelet
+                           All Rights Reserved.
+
+
+
+
+GFL v3.11 (LIBFORMAT v5.42) 02/07/2009:
+   
+   + gflBitmapSetIPTC & gflSaveIPTC bug
+
+GFL v3.05 (LIBFORMAT v5.40) 26/06/2009:
+   
+   + ExtrasInfos added in GFL_FILE_INFORMATION
+   + IFD0 & MAIN_IFD was mixed
+   + Loossless IPTC editing on TIFF
+   + ratio & maxfilesize for jpeg2000
+   + gflBitmapSetEXIFValueRationalArray2 added to set GPS
+   + Fixed : Some bugs
+
+GFL v2.90 (LIBFORMAT v5.02) 09/09/2008:
+
+   + Fixed : Some bugs
+
+GFL v2.82 (LIBFORMAT v4.90) 27/02/2008:
+
+    + PNG with thread
+
+GFL v2.80 (LIBFORMAT v4.85) 19/12/2007:
+
+    + Fixed : Some bugs
+
+
+GFL v2.70 (LIBFORMAT v4.79) 29/05/2007:
+
+    + Fixed : Some bugs
+
+
+GFL v2.66 (LIBFORMAT v4.75) 01/02/2007:
+
+    + Added : gflDropShadow
+    + Changed : Some changes in GFL_BITMAP, GFL_LOAD_CALLBACKS, GFL_SAVE_PARAMS
+    + Fixed : Many bugs
+
+
+GFL v2.54 (LIBFORMAT v4.57) 15/03/2006:
+
+    + Added : in GFL_LOAD_PARAMS, PNGComposeWithAlpha & WMFHighResolution
+    + Added : gflReduceNoise
+    + Added : gflSetTransparentColor
+    + Fixed : Many bugs
+
+
+GFL v2.40 (LIBFORMAT v4.47) 30/06/2005:
+
+    + Fixed : Many bugs
+
+
+GFL v2.30 (LIBFORMAT v4.25) 27/09/2004:
+
+    + Added : gflBitmapGetIPTCValue, gflBitmapGetEXIFValue
+    + Added : DpxByteOrder in GFL_SAVE_PARAMS
+    + Added : gflLoadEXIF
+    + Added : Alpha in GFL_COLORMAP for future feature
+    + Changed : GFL_BITMAP not padded correctly
+
+
+GFL v2.20 (LIBFORMAT v4.25) 27/09/2004:
+
+    + Added : GFL_ALLOCATEBITMAP_CALLBACK, GFL_PROGRESS_CALLBACK & GFL_WANTCANCEL_CALLBACK callback
+    + Added : gflSetIPTCValue & gflRemoveIPTCValue to change IPTC value
+    + Added : gflLoadIPTC, gflSaveIPTC, gflBitmapSetIPTC
+    + Added : gflJPEGGetComment, gflJPEGSetComment, gflPNGGetComment, gflPNGSetComment
+    + Added : Support of long pathname on Windows NT (with \\?\)
+    + Added : gflGetFileInformationFromMemory, gflLoadBitmapFromMemory, gflLoadThumbnailFromMemory
+    + Fixed : gflCloneBitmap, gflSetColorAt, gflGetColorAt with 10, 12, 16 bits
+    + Fixed : Many bugs
+    + Thanks to Alexandre PELLET for the HTML index
+
+
+GFL v2.12 (LIBFORMAT v4.20) 27/05/2004:
+
+    + Fixed : Delphi header (gflRotate)
+
+
+GFL v2.11 (LIBFORMAT v4.20) 27/05/2004:
+
+    + Added : gflBitbltEx (use alpha if in src)
+    + Fixed : many bugs
+
+
+GFL v2.02 (LIBFORMAT v4.11) 11/12/2003:
+
+    + Added : gflLoadBitmapIntoDIBSection, gflConvertBitmapIntoDIBSection
+    + Added : gflConvertBitmapIntoDDBEx
+    + Fixed : read error with CMYK files
+    + Fixed : some memory leaks
+
+
+GFL v2.01 (LIBFORMAT v4.11) 11/12/2003:
+
+    + Added : OptimizeHuffmanTable, InAscii in GFL_SAVE_PARAMS
+    + Added : LutType, LutData, LutFilename in GFL_LOAD_PARAMS for Cineon/DPX
+    + Added : LutType, LutData, LutFilename in GFL_SAVE_PARAMS for Cineon/DPX
+    + Added : GFL_SAVE_ANYWAY
+    + Added : GFL_LOAD_ORIGINAL_DEPTH to load the picture in 10/12/16bits
+    + Added : 16bits per component read/write support
+              Cineon   10/12/16bits R/W
+              DPX      10/12/16bits R/W
+              TIFF     16bits R/W
+              PNG      16bits R/W
+              PSD      16bits R
+              SGI      16bits R/W
+              Maya IFF 16bits R
+    + Added : to know if a bitmap or bitmap type is supported in writing by a format
+              gflBitmapIsSupportedByIndex, gflBitmapIsSupportedByName
+              gflBitmapTypeIsSupportedByIndex, gflBitmapTypeIsSupportedByName
+    + Added : gflLibraryInitEx to set user memory callback
+    + Added : GFL_LOAD_HIGH_QUALITY_THUMBNAIL for gflLoadThumbnail
+    + Added : gflBitmapHasEXIF, gflBitmapHasIPTC, gflBitmapRemoveEXIFThumbnail
+              gflBitmapRemoveMetaData, gflBitmapSetComment
+    + Fixed : Memory not freed in DIB/HBITMAP function
+    + Changed : GFL_BITMAP
+    + Changed : GFL_COLOR use GFL_UINT16 now
+    + Changed : gflLoadPreview => gflLoadThumbnail
+
+
+GFL v1.93 (LIBFORMAT v3.93) 02/04/2003:
+
+    + Added : gflGetFileInformationFromHandle
+    + Added : Small, standard & full dll
+    + Fixed : bugs
+    + Fixed : Delphi include
+
+
+GFL v1.90 (LIBFORMAT v3.90) 20/12/2003:
+
+    + Added : tolerance in gflAutoCrop
+    + Added : gflImportFromClipboard, gflExportIntoClipboard & gflImportFromHWND
+    + Added : gflConvolve & gflEqualizeOnLuminance
+    + Added : gflReplaceColor & gflMerge
+    + Added : GFL_LOAD_ORIGINAL_COLORMODEL to load CMYK file in CMYK
+    + Added : gflDrawPointColor, gflDrawLineColor, gflDrawPolylineColor, gflDrawRectangleColor, gflDrawPolygonColor, gflDrawCircleColor
+    + Added : gflSepia & gflSepiaExt
+    + Added : gflAdjustHLS
+    + Added : gflRotateFine
+    + Added : gflSetColorAt
+    + Changed : color added in gflRotate & gflRotateFine
+    + Changed : color added in gflAllockBitmap
+    + Changed : Many bugs fixed & format added
+    + Changed : gflResizeCanvas, mode added
+    + Changed : ps/eps, wmf & emf, ppm, xbm & xpm in small lib
+
+
+GFL v1.75 (LIBFORMAT v3.80) 10/06/2002:
+
+    + Added: EpsDpi, EpsWidth, EpsHeight in LOAD_PARAMS for postscript loading
+
+
+GFL v1.70 (LIBFORMAT v3.71) 10/06/2002:
+
+    + Fixed: Some problems with gflChangeColorDepth
+    + Added: gflSwapColors
+    + Added: gflSetPluginsPathname to use XnView's plugins
+    + Changed: BE CAREFULL, now black&white file are loaded with 1bit/pixel. 
+      If you want always load your binary file in 1bit/pixel, use the flag
+      GFL_LOAD_BINARY_AS_GREY
+
+
+GFL v1.56 (LIBFORMAT v3.56) 29/03/2002:
+
+    + Added: DefaultAlpha in GFL_LOAD_PARAMS
+    + Fixed: Some problems with GFL_ARGB type
+
+
+GFL v1.55 (LIBFORMAT v3.55) 29/03/2002:
+
+    + Added: gflCloneBitmap
+    + Added: gflAutoCrop
+    + Fixed: Problems when bitmap origin is GFL_BOTTOM
+    + Added: Filters in GFLAx
+    + Added: Multi-thread support
+    + Added: gflBitblt
+    + Fixed: DPX little endian
+    + Fixed: BFX BITWARE with more than 1 page
+    + Fixed: BMP 15bits
+    + Fixed: EPS/PS with ghostscript
+    + Fixed: MBM 12 & 16 bits
+    + Fixed: PCX 256colors
+    + Added: PhotoPaint stand alone format
+    + Added: Macintosh PICT jpeg
+    + Added: writing WRL with alpha
+    + Added: FITS write support
+    + Added: DPX write support
+    + Added: Auto F/X, AIP read support
+    + Added: B3D read support
+    + Added: In GFLAx, 
+        Average, Balance, Blur, Brightness
+        Contrast, EdgeDetectHeavy, EdgeDetectLight, EdgeDetectMedium
+        Emboss, EmbossMore, EnhanceDetail, EnhanceFocus, FocusRestauration
+        Equalize, Gamma, GaussianBlur, LogCorrection, Maximum, Minimum
+        MedianBox, MedianCross, Negative, Normalize, Sharpen, Soften
+        BackColor, Clone, MaskColor, NumberOfColorsUsed
+        SaveFormatDescription, UseTransparency, Refresh
+    + Fixed: In GFLAx, ChangeColorDepth
+    + Changed: In GFLAx SaveFormat
+    + Added: ARGB support
+
+
+GFL v1.50 (LIBFORMAT v3.51) 19/03/2002:
+
+    + Added: GFL_LOAD_BY_EXTENSION_ONLY for GFL_LOAD_PARAMS
+    + Added: GFL_LOAD_READ_ALL_COMMENT for GFL_LOAD_PARAMS
+    + Added: ColorModel & Comment in GFL_FILE_INFORMATION
+    + Added: gflFreeFileInformation
+             Now you must use this function to freeing GFL_FILE_INFORMATION
+    + Added: gflGetLabelForColorModel
+    + Added: GFL_COLOR
+    + Added: gffCanvasResize
+    + Added: gflGetColorAt
+    + Added: gflJpegLosslessTransform
+    + Changed: All process functions can be used with NULL for dst !
+    + Changed: GFL_FILE_INFORMATION struct
+    + Changed: GFL_MODE_TO_TRUECOLORS removed
+        New GFL_MODE_TO_RGB, GFL_MODE_TO_RGBA, GFL_MODE_TO_BGR, GFL_MODE_TO_ABGR, GFL_MODE_TO_BGRA
+    + Added: 
+        gflLogCorrection
+        gflNormalize
+        gflEqualize
+        gflBalance
+    + Added: Bitmap type GFL_BGRA
+    + Added: GFL_LOAD_FORCE_COLOR_MODEL to load all picture in 24 or 32 bits !
+    + Added: GFL_ERROR_BAD_PARAMETERS
+    + Added: GFL_MODE_TO_RGB, GFL_MODE_TO_RGBA, GFL_MODE_TO_BGR
+             GFL_MODE_TO_ABGR, GFL_MODE_TO_BGRA for gflChangeColorDepth
+    + Changed: filters & lut tools are now in GFL Extended
+    + Changed: GFL_BITMAP structure
+    + Changed: GFLSTDAPI deleted, now Callbakcs are GFLAPI
+    + Added: In GFLE, gflConvertBitmapIntoDIB, gflConvertBitmapIntoDDB, gflConvertDIBIntoBitmap
+             gflConvertDDBIntoBitmap, gflLoadBitmapIntoDIB, gflLoadBitmapIntoDDB (Windows only)
+    + Added: In GFLE, gflAddText (Windows only)
+    + Added: PDS3 read support
+    + Fixed: EPS with preview & TIFF
+    + Fixed: DPI are not saved correctly in JPEG
+    + Fixed: With WMF/EMF some memory not freed
+    + Fixed: JPEG writing crash if no more space
+    + Fixed: kqp
+    + Fixed: IFF 6bits
+    + Fixed: FLI
+    + Fixed: Maya IFF with Zbuffer
+    + Fixed: XWD 16bits
+    + Fixed: PNG interlaced writing
+    + Fixed: FPG & MAP reading
+    + Fixed: PCX size greater than 16000
+    + Fixed: 24bits ICO writing
+    + Fixed: GIF writing with transparency=0
+    + Fixed: Dicom reading
+    + Fixed: PCD with rotate flag
+    + Fixed: Transparency index in PNG
+    + Fixed: 2bits tiff writing
+    + Fixed: Softimage pic problem
+    + Fixed: Tiff with bad RowPerStrip
+    + Changed: TIFF G3/G4 are now saved with Photometric (white=0)
+    + Added: Kinupix skin, Just Buttons animated, Axialis screensaver read support
+    + Added: TI86 read support
+    + Added: Webshots read support
+    + Added: Amiga icon read support
+    + Added: MBM 12, 16 & 24 bit read support
+    + Added: CLP 16bits read support
+    + Added: Targa 32bits in RLE
+    + Added: Biorad writing
+    + Added: PABX background read/write support
+    + Added: Picture Gear Pocket read/write support
+    + Added: Xerox DIFF, Hemera Photo Image read support
+    + Added: ARN read support
+    + Added: Male MRI & Male Normal CT read support
+    + Added: PhotoPaint read support
+    + Added: BYU-SIR read support
+    + Added: BYU-SIR, CoverDesigner & CoverDesigner Template read support
+
+
+GFL v1.31 (LIBFORMAT v3.15) 10/10/2001:
+
+    + Changed: gflSaveBitmapFromHandle renamed in gflSaveBitmapIntoHandle
+    + Fixed: GFL_LOAD_IGNORE_READ_ERROR not used
+
+
+GFL v1.30 (LIBFORMAT v3.15) 10/10/2001:
+
+    + Added: Interface for Delphi (Thanks to Ingo Neumann)
+    + Added: Interface for Visual Basic (Thanks to Jerome Quintard)
+    + Added: Tiff LZW+Predictor writing
+    + Added: ColorModel in LOAD_PARAMS
+             bitmap can be loaded in BGR order and GFL_BOTTOM_LEFT
+    + Added: LoadBitmapFromHandle & LoadPreviewFromHandle
+    + Added: TransparentIndex in GFL_BITMAP
+    + Added: GFL_LOAD_IGNORE_READ_ERROR
+    + Added: SaveBitmapFromHandle
+    + Added: Light version of GFL (libgfls) with only support of PNG/JPEG/BMP/TARGA/TIF/IFF/GIF/PCX/XPM/PICT
+    + Added: gflGetNumberOfColorsUsed
+
+
+GFL v1.20 (LIBFORMAT v3.00) 26/06/2001:
+
+    + Added : 
+        * gflFormatIsSupported
+        * gflFormatIsWritableByIndex, gflFormatIsWritableByName
+        * gflFormatIsReadableByIndex, gflFormatIsReadableByName
+        * gflGetDefaultFormatSuffixByIndex, gflGetDefaultFormatSuffixByName
+        * gflGetFormatDescriptionByIndex, gflGetFormatDescriptionByName
+    + Added parameters for PCD/RAW/YUV
+    + Added gflwException
+    + Added gflwFormat::GetDefaultExtension
+    + Added gflwColormap
+    + Added .lib for bcc
+
+
+GFL v1.10 (LIBFORMAT v2.98) 22/01/2001:
+
+    o Available
+

@@ -1,0 +1,120 @@
+L : Light version
+S : Standard version
+P : Plugin
+
+     Name      Format                                 Extension                 Compression       Remarks
+===========================================================================================================
+
+LS   [psd]     Adobe Photoshop Document                 psd
+ S   [alias]   Alias Image                              pix als alias
+LS   [iff]     Amiga IFF                                iff blk                  (1)
+ P   [bmf]     BMF                                      bmf                                         Windows only, Plugin required
+ S   [bob]     Bob Ray-Tracer                           bob
+ S   [cals]    CALS Raster Goup 1                       cal cals
+ S   [crw]     Canon PowerShot                          crw
+ S   [cam]     Casio QV-10/100 Camera                   cam
+ S   [cmt]     Chinon ES-1000 digital camera            cmt
+ S   [cloe]    Cloe Ray-tracer                          clo
+LS   [gif]     CompuServe GIF                           gif giff
+ S   [dkb]     DKB Ray-tracer                           dis
+ S   [dpx]     DPX                                      dpx
+ S   [lbm]     Deluxe Paint, Electronic Arts            lbm
+ S   [tdim]    Digital F/X                              tdim graf
+LS   [epi]     EPS Interchange Format                   epi                                        Ghostscript needed, available on http://www.cs.wisc.edu/~ghost/
+ S   [eidi]    Electric Image                           ei eidi
+ S   [eps]     Encapsulated Postscript (Preview)        eps
+ S   [tdi]     Explore (TDI) & Maya                     tdi iff
+  P  [fpx]     FlashPix                                 fpx                                        Windows only, Plugin required
+ S   [xcf]     Gimp Bitmap                              xcf
+ S   [gbr]     Gimp Brush                               gbr
+ S   [gicon]   Gimp Icon                                ico
+ S   [gpat]    Gimp Pattern                             pat
+ S   [miff]    Image Magick                             mif miff
+ S   [q3n]     Imaging Fax                              g3n
+ S   [ingr]    Intergraph Format                        itg cit rle
+  P  [jbig]    Joint Bi-level Image experts Group       jbg jbig                                    Windows only, Plugin required
+LS   [jpeg]    Joint Photographic Experts Group         jpg jpeg jif jfif J
+  P  [jpc]     JPEG-2000 Code Stream                    jpc                                         Windows only, Plugin required
+  P  [jp2]     JPEG-2000 JP2 File Format                jp2                                         Windows only, Plugin required
+  P  [jls]     JPEG-ls                                  jls                                         Windows only, Plugin required
+ S   [jif]     Jeff's Image Format                      jif
+  P  [jng]     Jpeg Network Graphics                    jng                                         Windows only, Plugin required
+ S   [cin]     Kodak Cineon                             cin dpx
+ S   [kdc]     Kodak DC120 Digital Camera               kdc
+ S   [k25]     Kodak DC25 Camera                        k25
+ S   [pcd]     Kodak Photo CD                           pcd
+ S   [kqp]     Konica Camera File                       kqp
+ S   [lff]     LucasFilm Format                         lff
+ S   [mtv]     MTV Ray-tracer                           mtv
+LS   [pict]    Macintosh Quickdraw/Pict                 pic pict pct
+ S   [pdx]     Mayura Draw                              pdx
+ S   [mng]     Multiple Network Graphics                mng
+ S   [os2]     OS/2 Bitmap                              bmp bga                  (1) 4 & 8 bits
+ S   [oil]     Open Image Library Format                oil
+ S   [jbf]     PaintShopPro Browser Cache File          jbf
+ S   [pfr]     PaintShopPro Frame                       pfr
+ S   [psp]     PaintShopPro Image                       psp
+ S   [pmsk]    PaintShopPro Mask                        msk
+ S   [pspp]    PaintShopPro Pattern                     pat
+ S   [tub]     PaintShopPro Picture Tube                tub
+ S   [pspt]    PaintShopPro Texture                     tex
+ S   [palm]    Palm Pilot                               pdb
+ S   [pegs]    Pegs                                     pxa pxs
+ S   [apx]     Photopaint Image                         apx
+ S   [prc]     Picture Gear Pocket                      prc
+ S   [pxr]     Pixar picture file                       pic pxr picio pixar
+ S   [pixi]    Pixibox                                  pxb
+LS   [pbm]     Portable Bitmap                          pbm rpbm
+LS   [pdf]     Portable Document Format                 pdf                                        Ghostscript needed, available on http://www.cs.wisc.edu/~ghost/
+LS   [pgm]     Portable Greyscale                       pgm rpgm
+LS   [ppm]     Portable Image                           pnm rpnm
+LS   [png]     Portable Network Graphics                png
+ S   [ppm]     Portable Pixmap                          ppm rppm
+LS   [ps]      Postscript                               ps                                         Ghostscript needed, available on http://www.cs.wisc.edu/~ghost/ 
+ S   [psion3]  Psion Series 3                           pic
+ S   [psion5]  Psion Series 5                           mbm
+ S   [qrt]     Qrt Ray-tracer                           qrt
+ S   [vpb]     Quantel VPB                              vpb
+ S   [qtif]    Quicktime Picture                        qtif qti
+ S   [ray]     Rayshade                                 pic
+ S   [j6i]     Ricoh Digital Camera                     j6i
+ S   [sct]     SciTex Continuous Tone                   sct sc
+ S   [sfw]     Seattle Film Works                       sfw
+ S   [pwp]     Seattle Film Works multi-image           pwp
+ S   [sj1]     Sega SJ-1 DIGIO                          sj1
+ S   [sgi]     Silicon Graphics RGB                     rgb bw iris sgi          (1)
+ S   [soft]    Softimage bitmap                         pic si                   (1)
+ S   [pmp]     Sony DSC-F1 Cyber-shot                   pmp
+ S   [tim]     Sony Playstation TIM PSX                 tim
+ S   [icon]    Sun Icon/Cursor                          icon cursor pr
+ S   [ras]     Sun Raster Images                        ras rast sun sr scr rs
+ S   [taac]    Sun TAAC file format                     iff vff suniff taac
+ S   [synu]    Synthetic Universe                       synu syn
+LS   [tiff]    TIFF Revision 6                          tif tim tiff             (1) (2) (3)
+LS   [tga]     TrueVision Targa                         tga pix bpx vda icb vst  (1)
+ S   [rle]     Utah Raster image                        rle
+ S   [vst]     Vista                                    vst
+ S   [vivid]   Vivid Ray-tracer                         img
+ S   [rla]     Wavefront Raster file                    rla rlb
+ S   [wbc]     Webshots                                 wbc wbp wbz
+ S   [fxs]     Winfax                                   fxs fxo
+LS   [wmf]     Windows & Aldus Metafile                 wmf                                         Windows only
+LS   [bmp]     Windows Bitmap                           bmp rle rl4 rl8 sys      (1) 4 & 8 bits
+ S   [clp]     Windows Clipboard                        clp
+ S   [cur]     Windows Cursor                           cur
+ S   [dib]     Windows DIB                              dib
+LS   [emf]     Windows Enhanced Metafile                emf                                         Windows only
+ S   [ico]     Windows Icon                             ico
+ S   [wbmp]    Wireless Bitmap (level 0)                wbmp wbm wap
+LS   [xbm]     X11 BitMap                               xbm bm
+LS   [xpm]     X11 PixMap                               xpm pm
+ S   [p7]      XV Visual Schnauzer                      p7
+LS   [pcx]     Zsoft Multi-page Paintbrush              dcx
+ S   [dcx]     Zsoft Publisher's Paintbrush             pcx pcc dcx              (1)
+
+
+Compression Type
+================
+1    Rle
+2    LZW
+3    LZW + Prediction

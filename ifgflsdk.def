@@ -1,0 +1,11 @@
+EXPORTS
+ ;GetPluginInfoW	@1
+ ;IsSupportedW	@2
+ ;GetPictureInfoW @3
+ ;GetPictureW	@4
+ ;GetPreviewW	@5
+ GetPluginInfo
+ IsSupported
+ GetPictureInfo
+ GetPicture
+ GetPreview
