@@ -7,7 +7,7 @@
 #include <shlwapi.h>
 #pragma comment(lib,"shlwapi.lib")
 
-SPI_RESULT gflErrorToSpiResult(GflError error) noexcept
+SPI_RESULT GflErrorToSpiResult(GflError error) noexcept
 {
 	switch (error)
 	{
@@ -42,7 +42,7 @@ int WINAPI GetPluginInfo(int32_t infono, LPSTR  buf, int32_t buflen) noexcept
 			return (::strcpy_s(buf, buflen, "00IN")) == 0 ? std::strlen(buf) : 0;
 		case 1:
 		{
-			return (::strcpy_s(buf, buflen, ("GFL SDK " + std::string(::gflGetVersion())).c_str())) == 0 ? std::strlen(buf) : 0;
+			return (::strcpy_s(buf, buflen, ("ifgsldk: 0.1, GFL SDK: " + std::string(::gflGetVersion())).c_str())) == 0 ? std::strlen(buf) : 0;
 		}
 		}
 
@@ -83,17 +83,13 @@ BOOL WINAPI IsSupported(LPCSTR filename, void* dw) noexcept
 			else { // ファイルハンドル
 			}
 
-			auto ext = ::PathFindExtensionA(filename);
-			if (ext)
+			auto formats = GflFormats::getReadableFormats();
+			for (auto& f : formats)
 			{
-				auto formats = GflFormats::getReadableFormats();
-				for (auto& f : formats)
+				for (UINT i = 0; i < f.NumberOfExtension; i++)
 				{
-					for (UINT i = 0; i < f.NumberOfExtension; i++)
-					{
-						if (::PathMatchSpecA(filename, (std::string("*.") + f.Extension[i]).c_str()))
-							return TRUE;
-					}
+					if (::PathMatchSpecA(filename, (std::string("*.") + f.Extension[i]).c_str()))
+						return TRUE;
 				}
 			}
 			return FALSE;
@@ -119,13 +115,13 @@ SPI_RESULT WINAPI GetPictureInfo(LPCSTR  buf, size_t len, SPI_FLAG flag, SUSIE_P
 			{
 				auto e = ::gflGetFileInformationFromMemory(reinterpret_cast<const BYTE*>(buf), len, -1, &fileInfo);
 				if (e != GFL_NO_ERROR)
-					return gflErrorToSpiResult(static_cast<GflError>(e));
+					return GflErrorToSpiResult(static_cast<GflError>(e));
 			}
 			else if ((flag & SPI_FLAG::SPI_INPUT_MASK) == SPI_FLAG::SPI_INPUT_FILE)
 			{
 				auto e = ::gflGetFileInformation(buf, -1, &fileInfo);
 				if (e != GFL_NO_ERROR)
-					return gflErrorToSpiResult(static_cast<GflError>(e));
+					return GflErrorToSpiResult(static_cast<GflError>(e));
 			}
 			else
 			{
@@ -143,7 +139,7 @@ SPI_RESULT WINAPI GetPictureInfo(LPCSTR  buf, size_t len, SPI_FLAG flag, SUSIE_P
 	}
 	catch (const GflException &e)
 	{
-		return gflErrorToSpiResult(e.code());
+		return GflErrorToSpiResult(e.code());
 	}
 	catch (const std::exception &e)
 	{
@@ -167,7 +163,7 @@ SPI_RESULT WINAPI GetPicture(LPCSTR  buf, size_t len, SPI_FLAG flag, HLOCAL* pHB
 			{
 				auto e = ::gflLoadBitmapFromMemory(reinterpret_cast<const BYTE*>(buf), len, &ptr, &load_params, &fileInfo);
 				if (e != GFL_NO_ERROR)
-					return gflErrorToSpiResult(static_cast<GflError>(e));
+					return GflErrorToSpiResult(static_cast<GflError>(e));
 			}
 			else if ((flag & SPI_FLAG::SPI_INPUT_MASK) == SPI_FLAG::SPI_INPUT_FILE)
 			{
@@ -175,8 +171,8 @@ SPI_RESULT WINAPI GetPicture(LPCSTR  buf, size_t len, SPI_FLAG flag, HLOCAL* pHB
 					return SPI_NO_FUNCTION;
 
 				auto e = ::gflLoadBitmap(buf, &ptr, &load_params, &fileInfo);
-				if(e != GFL_NO_ERROR)
-					return gflErrorToSpiResult(static_cast<GflError>(e));
+				if (e != GFL_NO_ERROR)
+					return GflErrorToSpiResult(static_cast<GflError>(e));
 			}
 			else
 			{
@@ -184,7 +180,8 @@ SPI_RESULT WINAPI GetPicture(LPCSTR  buf, size_t len, SPI_FLAG flag, HLOCAL* pHB
 			}
 
 			const GflBitmapPtr pBitmap(ptr);
-			std::unique_ptr<BITMAPINFOHEADER, decltype(&::LocalFree)> pBInfo(static_cast<BITMAPINFOHEADER*>(::LocalAlloc(LMEM_FIXED | LMEM_ZEROINIT, sizeof(BITMAPINFOHEADER) + sizeof(RGBQUAD) * pBitmap->ColorUsed )), &::LocalFree);
+			std::unique_ptr<BITMAPINFOHEADER, decltype(&::LocalFree)> pBInfo(
+				static_cast<BITMAPINFOHEADER*>(::LocalAlloc(LMEM_FIXED | LMEM_ZEROINIT, sizeof(BITMAPINFOHEADER) + sizeof(RGBQUAD) * pBitmap->ColorUsed)), &::LocalFree);
 
 			if (!pBInfo)
 				return SPI_NO_MEMORY;
@@ -192,6 +189,7 @@ SPI_RESULT WINAPI GetPicture(LPCSTR  buf, size_t len, SPI_FLAG flag, HLOCAL* pHB
 			switch (pBitmap->Type)
 			{
 			case GFL_GREY:
+			case GFL_COLORS:
 			case GFL_BGRA:
 			case GFL_BGR:
 				break;
@@ -216,15 +214,21 @@ SPI_RESULT WINAPI GetPicture(LPCSTR  buf, size_t len, SPI_FLAG flag, HLOCAL* pHB
 			RGBQUAD *colorTable = reinterpret_cast<RGBQUAD*>(pBInfo.get() + 1);
 
 			if (pBitmap->ColorMap)
-				std::memcpy(colorTable, pBitmap->ColorMap, sizeof(RGBQUAD) * pBitmap->ColorUsed);
+			{
+				for (INT i = 0; i < pBitmap->ColorUsed; i++)
+				{
+					colorTable[i].rgbBlue = pBitmap->ColorMap->Blue[i];
+					colorTable[i].rgbRed = pBitmap->ColorMap->Red[i];
+					colorTable[i].rgbGreen = pBitmap->ColorMap->Green[i];
+				}
+			}
 			else if (pBitmap->Type == GFL_GREY)
 			{
-				for (UINT i = 0; i < pBitmap->ColorUsed; i++)
+				for (INT i = 0; i < pBitmap->ColorUsed; i++)
 				{
 					colorTable[i].rgbBlue = colorTable[i].rgbGreen = colorTable[i].rgbRed = static_cast<BYTE>(i);
 				}
 			}
-
 
 			std::unique_ptr<void, decltype(&::LocalFree)> pBm(::LocalAlloc(LMEM_FIXED | LMEM_ZEROINIT, pBInfo->biSizeImage), &::LocalFree);
 			if (!pBm)
@@ -240,7 +244,7 @@ SPI_RESULT WINAPI GetPicture(LPCSTR  buf, size_t len, SPI_FLAG flag, HLOCAL* pHB
 	}
 	catch (const GflException &e)
 	{
-		return gflErrorToSpiResult(e.code());
+		return GflErrorToSpiResult(e.code());
 	}
 	catch (const std::exception &e)
 	{

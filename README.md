@@ -3,7 +3,8 @@
 ## 64bit版
 APIは
 http://toro.d.dooo.jp/slplugin.html
-に従います。
+に従います。  
+現時点ではテストしていません。
 
 ## TODO
 - Unicode API対応。
