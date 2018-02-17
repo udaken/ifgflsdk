@@ -4,24 +4,24 @@
 #include <windows.h>
 
 // Susie エラーコード
-enum SPI_RESULT
+enum class SUSIE_RESULT
 {
-	SPI_NO_FUNCTION = -1, // その機能はインプリメントされていない
-	SPI_ALL_RIGHT = 0, // 正常終了
+	NO_FUNCTION = -1, // その機能はインプリメントされていない
+	ALL_RIGHT = 0, // 正常終了
 	SPI_E_ABORT = 1, // コールバック関数が非0を返したので展開を中止した
-	SPI_NOT_SUPPORT = 2, // 未知のフォーマット
-	SPI_OUT_OF_ORDER = 3, // データが壊れている
+	NOT_SUPPORT = 2, // 未知のフォーマット
+	OUT_OF_ORDER = 3, // データが壊れている
 	SPI_NO_MEMORY = 4, // メモリーが確保出来ない
-	SPI_MEMORY_ERROR = 5, // メモリーエラー
-	SPI_FILE_READ_ERROR = 6, // ファイルリードエラー
+	MEMORY_ERROR = 5, // メモリーエラー
+	FILE_READ_ERROR = 6, // ファイルリードエラー
 	SPI_WINDOW_ERROR = 7, // 窓が開けない (非公開のエラーコード)
-	SPI_OTHER_ERROR = 8, // 内部エラー
-	SPI_FILE_WRITE_ERROR = 9, // 書き込みエラー (非公開のエラーコード)
+	OTHER_ERROR = 8, // 内部エラー
+	FILE_WRITE_ERROR = 9, // 書き込みエラー (非公開のエラーコード)
 	SPI_END_OF_FILE = 10, // ファイル終端 (非公開のエラーコード)
 };
 
 // Susie 追加情報フラグ
-enum SPI_FLAG
+enum class SUSIE_FLAG
 {
 	SPI_INPUT_MASK = 0b111,
 	SPI_INPUT_FILE = 0b000, // 入力はディスクファイル
@@ -81,34 +81,34 @@ typedef struct {
 extern "C"
 {
 	// コールバック
-	typedef int(WINAPI *SUSIE_PROGRESS)(int nNum, int nDenom, LONG_PTR lData);
+	typedef int(WINAPI *SUSIE_PROGRESS)(int32_t nNum, int32_t nDenom, LONG_PTR lData);
 
-	int WINAPI GetPluginInfo(int32_t infono, LPSTR  buf, int32_t buflen);
-	int WINAPI GetPluginInfoW(int32_t infono, LPWSTR buf, int32_t buflen);
+	int32_t WINAPI GetPluginInfo(int32_t infono, LPSTR  buf, int32_t buflen);
+	int32_t WINAPI GetPluginInfoW(int32_t infono, LPWSTR buf, int32_t buflen);
 
 	BOOL WINAPI IsSupported(LPCSTR  filename, void* dw);
 	BOOL WINAPI IsSupportedW(LPCWSTR filename, void* dw);
 
-	SPI_RESULT WINAPI GetPictureInfo(LPCSTR  buf, size_t len, SPI_FLAG flag, SUSIE_PICTUREINFO* lpInfo);
-	SPI_RESULT WINAPI GetPictureInfoW(LPCWSTR buf, size_t len, SPI_FLAG flag, SUSIE_PICTUREINFO* lpInfo);
+	SUSIE_RESULT WINAPI GetPictureInfo(LPCSTR  buf, size_t len, SUSIE_FLAG flag, SUSIE_PICTUREINFO* lpInfo);
+	SUSIE_RESULT WINAPI GetPictureInfoW(LPCWSTR buf, size_t len, SUSIE_FLAG flag, SUSIE_PICTUREINFO* lpInfo);
 
-	SPI_RESULT WINAPI GetPicture(LPCSTR  buf, size_t len, SPI_FLAG flag, HLOCAL* pHBInfo, HLOCAL* pHBm, SUSIE_PROGRESS progressCallback, intptr_t lData);
-	SPI_RESULT WINAPI GetPictureW(LPCWSTR buf, size_t len, SPI_FLAG flag, HLOCAL* pHBInfo, HLOCAL* pHBm, SUSIE_PROGRESS progressCallback, intptr_t lData);
+	SUSIE_RESULT WINAPI GetPicture(LPCSTR  buf, size_t len, SUSIE_FLAG flag, HLOCAL* pHBInfo, HLOCAL* pHBm, SUSIE_PROGRESS progressCallback, intptr_t lData);
+	SUSIE_RESULT WINAPI GetPictureW(LPCWSTR buf, size_t len, SUSIE_FLAG flag, HLOCAL* pHBInfo, HLOCAL* pHBm, SUSIE_PROGRESS progressCallback, intptr_t lData);
 
-	SPI_RESULT WINAPI GetPreview(LPCSTR  buf, size_t len, SPI_FLAG flag, HLOCAL* pHBInfo, HLOCAL* pHBm, SUSIE_PROGRESS progressCallback, intptr_t lData);
-	SPI_RESULT WINAPI GetPreviewW(LPCWSTR buf, size_t len, SPI_FLAG flag, HLOCAL* pHBInfo, HLOCAL* pHBm, SUSIE_PROGRESS progressCallback, intptr_t lData);
+	SUSIE_RESULT WINAPI GetPreview(LPCSTR  buf, size_t len, SUSIE_FLAG flag, HLOCAL* pHBInfo, HLOCAL* pHBm, SUSIE_PROGRESS progressCallback, intptr_t lData);
+	SUSIE_RESULT WINAPI GetPreviewW(LPCWSTR buf, size_t len, SUSIE_FLAG flag, HLOCAL* pHBInfo, HLOCAL* pHBm, SUSIE_PROGRESS progressCallback, intptr_t lData);
 
-	SPI_RESULT WINAPI GetArchiveInfo(LPCSTR  buf, size_t len, SPI_FLAG flag, HLOCAL* lphInf);
-	SPI_RESULT WINAPI GetArchiveInfoW(LPCWSTR buf, size_t len, SPI_FLAG flag, HLOCAL* lphInf);
+	SUSIE_RESULT WINAPI GetArchiveInfo(LPCSTR  buf, size_t len, SUSIE_FLAG flag, HLOCAL* lphInf);
+	SUSIE_RESULT WINAPI GetArchiveInfoW(LPCWSTR buf, size_t len, SUSIE_FLAG flag, HLOCAL* lphInf);
 
-	SPI_RESULT WINAPI GetFileInfo(LPCSTR  buf, size_t len, LPCSTR  filename, SPI_FLAG flag, SUSIE_FINFO* lpInfo);
-	SPI_RESULT WINAPI GetFileInfoW(LPCWSTR buf, size_t len, LPCWSTR filename, SPI_FLAG flag, SUSIE_FINFOW* lpInfo);
+	SUSIE_RESULT WINAPI GetFileInfo(LPCSTR  buf, size_t len, LPCSTR  filename, SUSIE_FLAG flag, SUSIE_FINFO* lpInfo);
+	SUSIE_RESULT WINAPI GetFileInfoW(LPCWSTR buf, size_t len, LPCWSTR filename, SUSIE_FLAG flag, SUSIE_FINFOW* lpInfo);
 
-	SPI_RESULT WINAPI GetFile(LPCSTR  src, size_t len, LPSTR  dest, SPI_FLAG flag, SUSIE_PROGRESS progressCallback, intptr_t lData);
-	SPI_RESULT WINAPI GetFileW(LPCWSTR src, size_t len, LPWSTR dest, SPI_FLAG flag, SUSIE_PROGRESS progressCallback, intptr_t lData);
+	SUSIE_RESULT WINAPI GetFile(LPCSTR  src, size_t len, LPSTR  dest, SUSIE_FLAG flag, SUSIE_PROGRESS progressCallback, intptr_t lData);
+	SUSIE_RESULT WINAPI GetFileW(LPCWSTR src, size_t len, LPWSTR dest, SUSIE_FLAG flag, SUSIE_PROGRESS progressCallback, intptr_t lData);
 
-	SPI_RESULT WINAPI ConfigurationDlg(HWND parent, int fnc);
+	SUSIE_RESULT WINAPI ConfigurationDlg(HWND parent, int fnc);
 
-	SPI_RESULT WINAPI CreatePicture(LPCSTR  filepath, SPI_FLAG flag, HLOCAL* pHBInfo, HLOCAL* pHBm, SUSIE_PICTUREINFO* lpInfo, SUSIE_PROGRESS progressCallback, intptr_t lData);
-	SPI_RESULT WINAPI CreatePictureW(LPCWSTR filepath, SPI_FLAG flag, HLOCAL* pHBInfo, HLOCAL* pHBm, SUSIE_PICTUREINFO* lpInfo, SUSIE_PROGRESS progressCallback, intptr_t lData);
+	SUSIE_RESULT WINAPI CreatePicture(LPCSTR  filepath, SUSIE_FLAG flag, HLOCAL* pHBInfo, HLOCAL* pHBm, SUSIE_PICTUREINFO* lpInfo, SUSIE_PROGRESS progressCallback, intptr_t lData);
+	SUSIE_RESULT WINAPI CreatePictureW(LPCWSTR filepath, SUSIE_FLAG flag, HLOCAL* pHBInfo, HLOCAL* pHBm, SUSIE_PICTUREINFO* lpInfo, SUSIE_PROGRESS progressCallback, intptr_t lData);
 }
