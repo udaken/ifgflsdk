@@ -98,17 +98,6 @@ extern "C"
 	SUSIE_RESULT WINAPI GetPreview(LPCSTR  buf, size_t len, SUSIE_FLAG flag, HLOCAL* pHBInfo, HLOCAL* pHBm, SUSIE_PROGRESS progressCallback, intptr_t lData);
 	SUSIE_RESULT WINAPI GetPreviewW(LPCWSTR buf, size_t len, SUSIE_FLAG flag, HLOCAL* pHBInfo, HLOCAL* pHBm, SUSIE_PROGRESS progressCallback, intptr_t lData);
 
-	SUSIE_RESULT WINAPI GetArchiveInfo(LPCSTR  buf, size_t len, SUSIE_FLAG flag, HLOCAL* lphInf);
-	SUSIE_RESULT WINAPI GetArchiveInfoW(LPCWSTR buf, size_t len, SUSIE_FLAG flag, HLOCAL* lphInf);
-
-	SUSIE_RESULT WINAPI GetFileInfo(LPCSTR  buf, size_t len, LPCSTR  filename, SUSIE_FLAG flag, SUSIE_FINFO* lpInfo);
-	SUSIE_RESULT WINAPI GetFileInfoW(LPCWSTR buf, size_t len, LPCWSTR filename, SUSIE_FLAG flag, SUSIE_FINFOW* lpInfo);
-
-	SUSIE_RESULT WINAPI GetFile(LPCSTR  src, size_t len, LPSTR  dest, SUSIE_FLAG flag, SUSIE_PROGRESS progressCallback, intptr_t lData);
-	SUSIE_RESULT WINAPI GetFileW(LPCWSTR src, size_t len, LPWSTR dest, SUSIE_FLAG flag, SUSIE_PROGRESS progressCallback, intptr_t lData);
-
 	SUSIE_RESULT WINAPI ConfigurationDlg(HWND parent, int fnc);
 
-	SUSIE_RESULT WINAPI CreatePicture(LPCSTR  filepath, SUSIE_FLAG flag, HLOCAL* pHBInfo, HLOCAL* pHBm, SUSIE_PICTUREINFO* lpInfo, SUSIE_PROGRESS progressCallback, intptr_t lData);
-	SUSIE_RESULT WINAPI CreatePictureW(LPCWSTR filepath, SUSIE_FLAG flag, HLOCAL* pHBInfo, HLOCAL* pHBm, SUSIE_PICTUREINFO* lpInfo, SUSIE_PROGRESS progressCallback, intptr_t lData);
 }

@@ -13,7 +13,7 @@ LWSTDAPI_(BOOL)     PathMatchSpecW(__in LPCWSTR pszFile, __in LPCWSTR pszSpec);
 
 #pragma comment(lib,"shlwapi.lib")
 
-static SUSIE_RESULT GflErrorToSpiResult(GflError error) noexcept
+constexpr inline SUSIE_RESULT GflErrorToSpiResult(GflError error) noexcept
 {
 	switch (error)
 	{

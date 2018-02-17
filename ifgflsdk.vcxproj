@@ -31,7 +31,7 @@
     <ProjectGuid>{E3A1C65F-9D5D-43D1-90B5-E463412B56F6}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>ifgflsdk</RootNamespace>
-    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>7.0</WindowsTargetPlatformVersion>
     <ProjectName>ifgflsdk</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -161,7 +161,6 @@
       <RuntimeTypeInfo>false</RuntimeTypeInfo>
       <EnforceTypeConversionRules>true</EnforceTypeConversionRules>
       <DiagnosticsFormat>Caret</DiagnosticsFormat>
-      <ControlFlowGuard>Guard</ControlFlowGuard>
       <ConformanceMode>true</ConformanceMode>
     </ClCompile>
     <Link>
