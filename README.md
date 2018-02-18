@@ -1,5 +1,5 @@
 # ifgflsdk
-GFL-SDK(https://www.xnview.com/en/GFL/index.php)で画像を展開するSusie Pluginです。  
+GFL-SDK( https://www.xnview.com/en/GFL/index.php )で画像を展開するSusie Pluginです。  
 保存APIには対応していません。
 
 ## ライセンス
