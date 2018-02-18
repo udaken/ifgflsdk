@@ -145,7 +145,7 @@
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>GflSDK\libW</AdditionalLibraryDirectories>
-      <AdditionalDependencies>libgfl.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
       <ModuleDefinitionFile>ifgflsdk.def</ModuleDefinitionFile>
       <MinimumRequiredVersion>5.1</MinimumRequiredVersion>
     </Link>
@@ -167,7 +167,7 @@
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>GflSDK\libW</AdditionalLibraryDirectories>
-      <AdditionalDependencies>libgfl.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
       <ModuleDefinitionFile>ifgflsdk.def</ModuleDefinitionFile>
       <MinimumRequiredVersion>5.1</MinimumRequiredVersion>
     </Link>
@@ -195,7 +195,7 @@
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>GflSDK\lib64W</AdditionalLibraryDirectories>
-      <AdditionalDependencies>libgfl.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
       <ModuleDefinitionFile>ifgflsdk.def</ModuleDefinitionFile>
     </Link>
   </ItemDefinitionGroup>
@@ -216,7 +216,7 @@
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>GflSDK\lib64W</AdditionalLibraryDirectories>
-      <AdditionalDependencies>libgfl.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
       <ModuleDefinitionFile>ifgflsdk.def</ModuleDefinitionFile>
     </Link>
     <PostBuildEvent>
@@ -239,6 +239,7 @@
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <ControlFlowGuard>Guard</ControlFlowGuard>
       <ConformanceMode>true</ConformanceMode>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -246,7 +247,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>GflSDK\libW</AdditionalLibraryDirectories>
-      <AdditionalDependencies>libgfl.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
       <ModuleDefinitionFile>ifgflsdk.def</ModuleDefinitionFile>
       <MinimumRequiredVersion>5.1</MinimumRequiredVersion>
     </Link>
@@ -267,6 +268,7 @@
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <ControlFlowGuard>Guard</ControlFlowGuard>
       <ConformanceMode>true</ConformanceMode>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -274,7 +276,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>GflSDK\lib64W</AdditionalLibraryDirectories>
-      <AdditionalDependencies>libgfl.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
       <ModuleDefinitionFile>ifgflsdk.def</ModuleDefinitionFile>
     </Link>
   </ItemDefinitionGroup>

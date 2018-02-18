@@ -4,6 +4,18 @@
 #include <memory>
 #include <cassert>
 
+//#include <shlwapi.h>
+#pragma comment(lib,"shlwapi.lib")
+#define LWSTDAPI_(type)   EXTERN_C DECLSPEC_IMPORT type STDAPICALLTYPE
+LWSTDAPI_(BOOL)     PathMatchSpecA(__in LPCSTR pszFile, __in LPCSTR pszSpec);
+LWSTDAPI_(BOOL)     PathMatchSpecW(__in LPCWSTR pszFile, __in LPCWSTR pszSpec);
+LWSTDAPI_(BOOL)     PathRemoveFileSpecA(__inout LPSTR pszPath);
+LWSTDAPI_(BOOL)     PathRemoveFileSpecW(__inout LPWSTR pszPath);
+LWSTDAPI_(LPSTR)  PathCombineA(__out_ecount(MAX_PATH) LPSTR pszDest, __in_opt LPCSTR pszDir, __in_opt LPCSTR pszFile);
+LWSTDAPI_(LPWSTR)  PathCombineW(__out_ecount(MAX_PATH) LPWSTR pszDest, __in_opt LPCWSTR pszDir, __in_opt LPCWSTR pszFile);
+LWSTDAPI_(BOOL)     PathAppendA(__inout_ecount(MAX_PATH) LPSTR pszPath, __in LPCSTR pMore);
+LWSTDAPI_(BOOL)     PathAppendW(__inout_ecount(MAX_PATH) LPWSTR pszPath, __in LPCWSTR pMore);
+
 enum class GflError : GFL_INT16
 {
 	NoError = GFL_NO_ERROR,
@@ -44,20 +56,85 @@ inline void GlfCheckError(GFL_ERROR code)
 		throw GflException(code);
 }
 
+class GflLibrary final
+{
+public:
+	GflLibrary() noexcept
+	{
+		if (g_hModule)
+		{
+			WCHAR buf[MAX_PATH] = {};
+			::GetModuleFileName(g_hModule, buf, _countof(buf));
+			::PathRemoveFileSpecW(buf);
+			::PathAppendW(buf, L"libgfl340.dll");
+			hLibgfl = ::LoadLibrary(buf);
+		}
+
+		if (hLibgfl)
+		{
+#define GETPROCADDRESS(hModule, _f) reinterpret_cast<decltype(&_f)>(::GetProcAddress(hLibgfl, #_f))
+			LibraryInit = GETPROCADDRESS(hLibgfl, gflLibraryInit);
+			LibraryExit = GETPROCADDRESS(hLibgfl, gflLibraryExit);
+			EnableLZW = GETPROCADDRESS(hLibgfl, gflEnableLZW);
+			FreeFileInformation = GETPROCADDRESS(hLibgfl, gflFreeFileInformation);
+			GetFormatInformationByIndex = GETPROCADDRESS(hLibgfl, gflGetFormatInformationByIndex);
+			FormatIsReadableByIndex = GETPROCADDRESS(hLibgfl, gflFormatIsReadableByIndex);
+			GetNumberOfFormat = GETPROCADDRESS(hLibgfl, gflGetNumberOfFormat);
+			FreeBitmap = GETPROCADDRESS(hLibgfl, gflFreeBitmap);
+			GetDefaultLoadParams = GETPROCADDRESS(hLibgfl, gflGetDefaultLoadParams);
+			GetVersion = GETPROCADDRESS(hLibgfl, gflGetVersion);
+			GetFormatDescriptionByIndex = GETPROCADDRESS(hLibgfl, gflGetFormatDescriptionByIndex);
+			GetDefaultFormatSuffixByIndex = GETPROCADDRESS(hLibgfl, gflGetDefaultFormatSuffixByIndex);
+			GetFileInformationFromMemory = GETPROCADDRESS(hLibgfl, gflGetFileInformationFromMemory);
+			GetFileInformation = GETPROCADDRESS(hLibgfl, gflGetFileInformation);
+			LoadBitmapFromMemory = GETPROCADDRESS(hLibgfl, gflLoadBitmapFromMemory);
+			LoadBitmap = GETPROCADDRESS(hLibgfl, gflLoadBitmap);
+#undef GETPROCADDRESS
+		}
+	}
+	~GflLibrary() noexcept
+	{
+		if (hLibgfl)
+			::FreeLibrary(hLibgfl);
+	}
+	bool isLoaded() const  noexcept
+	{
+		return hLibgfl != nullptr;
+	}
+	decltype(::gflLibraryInit) *LibraryInit = nullptr;
+	decltype(::gflLibraryExit) *LibraryExit = nullptr;
+	decltype(::gflEnableLZW) *EnableLZW = nullptr;
+	decltype(::gflFreeFileInformation) *FreeFileInformation = nullptr;
+	decltype(::gflGetFormatInformationByIndex) *GetFormatInformationByIndex = nullptr;
+	decltype(::gflFormatIsReadableByIndex) *FormatIsReadableByIndex = nullptr;
+	decltype(::gflGetNumberOfFormat) *GetNumberOfFormat = nullptr;
+	decltype(::gflFreeBitmap) *FreeBitmap = nullptr;
+	decltype(::gflGetDefaultLoadParams) *GetDefaultLoadParams = nullptr;
+	decltype(::gflGetVersion) *GetVersion = nullptr;
+	decltype(::gflGetFormatDescriptionByIndex) *GetFormatDescriptionByIndex = nullptr;
+	decltype(::gflGetDefaultFormatSuffixByIndex) *GetDefaultFormatSuffixByIndex = nullptr;
+	decltype(::gflGetFileInformationFromMemory) *GetFileInformationFromMemory = nullptr;
+	decltype(::gflGetFileInformation) *GetFileInformation = nullptr;
+	decltype(::gflLoadBitmapFromMemory) *LoadBitmapFromMemory = nullptr;
+	decltype(::gflLoadBitmap) *LoadBitmap = nullptr;
+private:
+	HMODULE hLibgfl = nullptr;
+};
+
 class GflFormats
 {
 private:
 	template <class Predicate>
-	static std::vector<GFL_FORMAT_INFORMATION> getFormats(Predicate pred)
+	static std::vector<GFL_FORMAT_INFORMATION> getFormats(const GflLibrary & lib, Predicate pred)
 	{
-		auto n = ::gflGetNumberOfFormat();
+		auto n = lib.GetNumberOfFormat();
 		std::vector<GFL_FORMAT_INFORMATION> formats(n);
 		for (auto i = 0; i < n; i++)
 		{
 			if (pred(i))
 			{
 				GFL_FORMAT_INFORMATION info;
-				auto result = ::gflGetFormatInformationByIndex(i, &info);
+				auto result = lib.GetFormatInformationByIndex(i, &info);
 				GlfCheckError(result);
 				formats.emplace_back(info);
 			}
@@ -66,30 +143,36 @@ private:
 
 	}
 public:
-	static std::vector<GFL_FORMAT_INFORMATION> getAllFormats()
+	static std::vector<GFL_FORMAT_INFORMATION> getAllFormats(const GflLibrary & lib)
 	{
-		return getFormats([](auto) { return true; });
+		return getFormats(lib, [](auto) { return true; });
 	}
-	static std::vector<GFL_FORMAT_INFORMATION> getReadableFormats()
+	static std::vector<GFL_FORMAT_INFORMATION> getReadableFormats(const GflLibrary & lib)
 	{
-		return getFormats([](auto i) { return ::gflFormatIsReadableByIndex(i); });
+		return getFormats(lib, [&](auto i) { return lib.FormatIsReadableByIndex(i); });
 	}
 };
 
 class GflLibraryInit final
 {
 public:
-	GflLibraryInit(bool enableLzw = true)
+	GflLibraryInit(const GflLibrary & lib, bool enableLzw = true) : lib(lib)
 	{
-		auto result = ::gflLibraryInit();
-		GlfCheckError(result);
-		if (enableLzw)
-			::gflEnableLZW(GFL_TRUE);
+		if (lib.isLoaded())
+		{
+			auto result = lib.LibraryInit();
+			GlfCheckError(result);
+			if (enableLzw)
+				lib.EnableLZW(GFL_TRUE);
+		}
 	}
 	~GflLibraryInit()
 	{
-		::gflLibraryExit();
+		if (lib.isLoaded())
+			lib.LibraryExit();
 	}
+private:
+	const GflLibrary & lib;
 };
 
 class GflInfomation final : public GFL_FILE_INFORMATION
@@ -97,8 +180,8 @@ class GflInfomation final : public GFL_FILE_INFORMATION
 private:
 	bool hadFree = false;
 public:
-	GflInfomation() : GFL_FILE_INFORMATION() {}
-	GflInfomation(GflInfomation && other) : GFL_FILE_INFORMATION(other)
+	GflInfomation(const GflLibrary & lib) : lib(lib), GFL_FILE_INFORMATION() {}
+	GflInfomation(GflInfomation && other) : lib(other.lib), GFL_FILE_INFORMATION(other)
 	{
 		std::swap(hadFree, other.hadFree);
 	}
@@ -106,7 +189,7 @@ public:
 	{
 		if (!hadFree)
 		{
-			::gflFreeFileInformation(this);
+			lib.FreeFileInformation(this);
 			hadFree = true;
 		}
 
@@ -114,43 +197,36 @@ public:
 	~GflInfomation()
 	{
 		if (!hadFree)
-			::gflFreeFileInformation(this);
+			lib.FreeFileInformation(this);
 	}
+private:
+	const GflLibrary & lib;
 };
 
 struct GflBitmapDeleter
 {
+	GflBitmapDeleter(const GflLibrary & lib) : lib(lib) {}
 	void operator()(GFL_BITMAP* ptr) {
-		::gflFreeBitmap(ptr);
+		lib.FreeBitmap(ptr);
 	}
+private:
+	const GflLibrary & lib;
 };
 
 typedef std::unique_ptr<GFL_BITMAP, GflBitmapDeleter> GflBitmapPtr;
 
-inline GflBitmapPtr GflMakeBitmapPtr(GFL_BITMAP *ptr)
+inline GflBitmapPtr GflMakeBitmapPtr(const GflLibrary & lib, GFL_BITMAP *&ptr) noexcept
 {
-	return GflBitmapPtr(ptr);
+	return { std::exchange(ptr, nullptr), GflBitmapDeleter(lib) };
 }
-
-class GflBitmap final
-{
-private:
-	GflBitmapPtr ptr;
-public:
-	GflBitmap(GFL_BITMAP *_ptr = nullptr) : ptr(_ptr)
-	{
-	}
-	template <class _D>
-	GflBitmap(std::unique_ptr<GFL_BITMAP, _D> &&_ptr) : ptr(_ptr)
-	{
-	}
-};
 
 class GflLoadParam final : public GFL_LOAD_PARAMS
 {
 public:
-	GflLoadParam()
+	GflLoadParam(const GflLibrary & lib) : lib(lib)
 	{
-		gflGetDefaultLoadParams(this);
+		lib.GetDefaultLoadParams(this);
 	}
+private:
+	const GflLibrary & lib;
 };

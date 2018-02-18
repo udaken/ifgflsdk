@@ -1,17 +1,13 @@
 ﻿#include "stdafx.h"
-#include "libgfl.h"
-#include "susie.hpp"
 #include <cstdlib>
 #include <cstring>
 #include <type_traits>
 #include <limits>
-#include "gfl.hpp"
-//#include <shlwapi.h>
-#define LWSTDAPI_(type)   EXTERN_C DECLSPEC_IMPORT type STDAPICALLTYPE
-LWSTDAPI_(BOOL)     PathMatchSpecA(__in LPCSTR pszFile, __in LPCSTR pszSpec);
-LWSTDAPI_(BOOL)     PathMatchSpecW(__in LPCWSTR pszFile, __in LPCWSTR pszSpec);
 
-#pragma comment(lib,"shlwapi.lib")
+#include "libgfl.h"
+#include "susie.hpp"
+
+#include "gfl.hpp"
 
 constexpr inline SUSIE_RESULT GflErrorToSpiResult(GflError error) noexcept
 {
@@ -35,7 +31,6 @@ constexpr inline SUSIE_RESULT GflErrorToSpiResult(GflError error) noexcept
 		return SUSIE_RESULT::NO_FUNCTION;
 	}
 }
-
 template <class F>
 constexpr inline F bitwiseOr(F a, F b) noexcept
 {
@@ -50,9 +45,10 @@ constexpr inline F bitwiseAnd(F a, F b) noexcept
 
 int32_t WINAPI GetPluginInfo(int32_t infono, LPSTR  buf, int32_t buflen) noexcept
 {
+	GflLibrary lib;
 	try
 	{
-		GflLibraryInit init;
+		GflLibraryInit init(lib);
 
 		switch (infono)
 		{
@@ -60,21 +56,24 @@ int32_t WINAPI GetPluginInfo(int32_t infono, LPSTR  buf, int32_t buflen) noexcep
 			return (::strcpy_s(buf, buflen, "00IN")) == 0 ? static_cast<int>(std::strlen(buf)) : 0;
 		case 1:
 		{
-			return (::strcpy_s(buf, buflen, ("ifgsldk: 0.1, GFL SDK: " + std::string(::gflGetVersion())).c_str())) == 0 ? static_cast<int>(std::strlen(buf)) : 0;
+			return (::strcpy_s(buf, buflen, ("ifgsldk: 0.1, GFL SDK: " 
+				+ std::string(lib.isLoaded() ? lib.GetVersion() : "Not installed.")).c_str())) == 0 ? static_cast<int>(std::strlen(buf)) : 0;
 		}
 		}
+
+		if (!lib.isLoaded()) return 0;
 
 		auto index = infono / 2;
 		auto isdescription = infono % 2;
 		if (isdescription)
 		{
-			auto s = ::gflGetFormatDescriptionByIndex(index);
+			auto s = lib.GetFormatDescriptionByIndex(index);
 			if (s == nullptr) return 0;
 			::strcpy_s(buf, buflen, s);
 		}
 		else
 		{
-			auto extName = ::gflGetDefaultFormatSuffixByIndex(index);
+			auto extName = lib.GetDefaultFormatSuffixByIndex(index);
 			if (extName == nullptr) return 0;
 			::strcpy_s(buf, buflen, (std::string("*.") + extName).c_str());
 		}
@@ -91,9 +90,11 @@ int32_t WINAPI GetPluginInfo(int32_t infono, LPSTR  buf, int32_t buflen) noexcep
 }
 BOOL WINAPI IsSupported(LPCSTR filename, void* dw) noexcept
 {
+	GflLibrary lib;
+	if (!lib.isLoaded()) return FALSE;
 	try
 	{
-		GflLibraryInit init;
+		GflLibraryInit init(lib);
 		{
 			//BYTE buff[2048];
 			if ((DWORD_PTR)dw & ~(DWORD_PTR)0xffff) { // 2K メモリイメージ
@@ -101,7 +102,7 @@ BOOL WINAPI IsSupported(LPCSTR filename, void* dw) noexcept
 			else { // ファイルハンドル
 			}
 
-			auto formats = GflFormats::getReadableFormats();
+			auto formats = GflFormats::getReadableFormats(lib);
 			for (auto& f : formats)
 			{
 				for (UINT i = 0; i < f.NumberOfExtension; i++)
@@ -124,24 +125,26 @@ BOOL WINAPI IsSupported(LPCSTR filename, void* dw) noexcept
 }
 SUSIE_RESULT WINAPI GetPictureInfo(LPCSTR  buf, size_t len, SUSIE_FLAG flag, SUSIE_PICTUREINFO* lpInfo) noexcept
 {
+	GflLibrary lib;
+	if (!lib.isLoaded()) return SUSIE_RESULT::OTHER_ERROR;
 	try
 	{
-		GflLibraryInit init;
+		GflLibraryInit init(lib);
 		{
-			GflInfomation fileInfo;
+			GflInfomation fileInfo(lib);
 			if (bitwiseAnd(flag, SUSIE_FLAG::SPI_INPUT_MASK) == SUSIE_FLAG::SPI_INPUT_MEMORY)
 			{
 				if (std::numeric_limits<decltype(len)>::max() > std::numeric_limits<GFL_UINT32>::max())
 				{
 					return SUSIE_RESULT::MEMORY_ERROR;
 				}
-				auto e = ::gflGetFileInformationFromMemory(reinterpret_cast<const BYTE*>(buf), static_cast<GFL_UINT32>(len), -1, &fileInfo);
+				auto e = lib.GetFileInformationFromMemory(reinterpret_cast<const BYTE*>(buf), static_cast<GFL_UINT32>(len), -1, &fileInfo);
 				if (e != GFL_NO_ERROR)
 					return GflErrorToSpiResult(static_cast<GflError>(e));
 			}
 			else if (bitwiseAnd(flag, SUSIE_FLAG::SPI_INPUT_MASK) == SUSIE_FLAG::SPI_INPUT_FILE)
 			{
-				auto e = ::gflGetFileInformation(buf, -1, &fileInfo);
+				auto e = lib.GetFileInformation(buf, -1, &fileInfo);
 				if (e != GFL_NO_ERROR)
 					return GflErrorToSpiResult(static_cast<GflError>(e));
 			}
@@ -171,23 +174,24 @@ SUSIE_RESULT WINAPI GetPictureInfo(LPCSTR  buf, size_t len, SUSIE_FLAG flag, SUS
 
 SUSIE_RESULT WINAPI GetPicture(LPCSTR  buf, size_t len, SUSIE_FLAG flag, HLOCAL* pHBInfo, HLOCAL* pHBm, SUSIE_PROGRESS /* progressCallback */, intptr_t /* lData */) noexcept
 {
+	GflLibrary lib;
+	if (!lib.isLoaded()) return SUSIE_RESULT::OTHER_ERROR;
 	try
 	{
-		GflLibraryInit init;
+		GflLibraryInit init(lib);
 		{
-			GflLoadParam load_params;
+			GflLoadParam load_params(lib);
 			load_params.Origin = GFL_BOTTOM_LEFT;
 			load_params.ColorModel = GFL_BGRA;
 
 			GFL_BITMAP *ptr = nullptr;
-			GflInfomation fileInfo;
 			if (bitwiseAnd(flag, SUSIE_FLAG::SPI_INPUT_MASK) == SUSIE_FLAG::SPI_INPUT_MEMORY)
 			{
 				if (std::numeric_limits<decltype(len)>::max() > std::numeric_limits<GFL_UINT32>::max())
 				{
 					return SUSIE_RESULT::MEMORY_ERROR;
 				}
-				auto e = ::gflLoadBitmapFromMemory(reinterpret_cast<const BYTE*>(buf), static_cast<GFL_UINT32>(len), &ptr, &load_params, &fileInfo);
+				auto e = lib.LoadBitmapFromMemory(reinterpret_cast<const BYTE*>(buf), static_cast<GFL_UINT32>(len), &ptr, &load_params, nullptr);
 				if (e != GFL_NO_ERROR)
 					return GflErrorToSpiResult(static_cast<GflError>(e));
 			}
@@ -196,7 +200,7 @@ SUSIE_RESULT WINAPI GetPicture(LPCSTR  buf, size_t len, SUSIE_FLAG flag, HLOCAL*
 				if (len != 0)
 					return SUSIE_RESULT::NO_FUNCTION;
 
-				auto e = ::gflLoadBitmap(buf, &ptr, &load_params, &fileInfo);
+				auto e = lib.LoadBitmap(buf, &ptr, &load_params, nullptr);
 				if (e != GFL_NO_ERROR)
 					return GflErrorToSpiResult(static_cast<GflError>(e));
 			}
@@ -205,7 +209,7 @@ SUSIE_RESULT WINAPI GetPicture(LPCSTR  buf, size_t len, SUSIE_FLAG flag, HLOCAL*
 				return SUSIE_RESULT::NO_FUNCTION;
 			}
 
-			const GflBitmapPtr pBitmap(ptr);
+			const GflBitmapPtr pBitmap = GflMakeBitmapPtr(lib, ptr);
 			std::unique_ptr<BITMAPINFOHEADER, decltype(&::LocalFree)> pBInfo(
 				static_cast<BITMAPINFOHEADER*>(::LocalAlloc(LMEM_FIXED | LMEM_ZEROINIT, sizeof(BITMAPINFOHEADER) + sizeof(RGBQUAD) * pBitmap->ColorUsed)), &::LocalFree);
 
@@ -226,12 +230,12 @@ SUSIE_RESULT WINAPI GetPicture(LPCSTR  buf, size_t len, SUSIE_FLAG flag, HLOCAL*
 
 			*pBInfo = {
 				sizeof(BITMAPINFOHEADER),
-				fileInfo.Width,
-				(pBitmap->Origin & GFL_BOTTOM ? 1 : -1) * fileInfo.Height,
+				pBitmap->Width,
+				(pBitmap->Origin & GFL_BOTTOM ? 1 : -1) * pBitmap->Height,
 				1,
 				static_cast<WORD>(pBitmap->BitsPerComponent * pBitmap->ComponentsPerPixel),
 				BI_RGB,
-				pBitmap->BytesPerLine * fileInfo.Height,
+				pBitmap->BytesPerLine * pBitmap->Height,
 				1,
 				1,
 				static_cast<DWORD>(pBitmap->ColorUsed),
@@ -256,7 +260,8 @@ SUSIE_RESULT WINAPI GetPicture(LPCSTR  buf, size_t len, SUSIE_FLAG flag, HLOCAL*
 				}
 			}
 
-			std::unique_ptr<void, decltype(&::LocalFree)> pBm(::LocalAlloc(LMEM_FIXED | LMEM_ZEROINIT, pBInfo->biSizeImage), &::LocalFree);
+			typedef std::unique_ptr<void, decltype(&::LocalFree)> LocalPtr;
+			LocalPtr pBm(::LocalAlloc(LMEM_FIXED | LMEM_ZEROINIT, pBInfo->biSizeImage), &::LocalFree);
 			if (!pBm)
 				return SUSIE_RESULT::SPI_NO_MEMORY;
 
