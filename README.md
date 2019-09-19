@@ -2,8 +2,17 @@
 GFL-SDK( https://www.xnview.com/en/GFL/index.php )で画像を展開するSusie Pluginです。  
 保存APIには対応していません。
 
+## 注意事項
+- 実験的なソフトウェアです。不具合が多いかと思います。
+- 各対応ファイルの動作確認はしていません。
+- GFL SDK は長らく更新されていません。脆弱性があった場合、対応される可能性が低いです。
+
 ## ライセンス
-ifgflsdk 自体はオープンソースですのでフリーに使用できます。  
+### ifgflsdk
+ifgflsdk 自体はオープンソース(MITライセンス)ですのでフリーに使用できます。  
+無保証で、いかなる保証もありません。自己責任で使用してください。
+
+### GFL-SDK
 GFL-SDKはフリーウェアで、個人的な利用または教育的利用に限られます。  
 > GFL SDK is provided as FREEWARE (NO Adware, NO Spyware) for private or educational use (including non-profit organizations).
 > If you enjoy using GFL SDK, Don't hesitate to help the developer with a small donation. 
@@ -12,6 +21,10 @@ GFL-SDKはフリーウェアで、個人的な利用または教育的利用に�
 - 32bit版(ifgflsdk.spi): Windows 7/8.1/10 (Windows XPでも動作すると思いますが、確認していません)  
 動作確認には主にLeeyes,NeeViewで行っています。
 - 64bit版(ifgflsdk.sph): Windows 7/8.1/10
+
+## ダウンロード
+下記からダウンロードしてください。
+https://github.com/udaken/ifgflsdk/releases
 
 ## インストール方法
 1. 使用しているSusie Pluginアプリケーションのプラグインフォルダにifgflsdk.spi (64bit版ではifgflsdk.sph)をコピーしてください。
